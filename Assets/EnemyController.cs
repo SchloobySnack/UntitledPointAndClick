@@ -114,7 +114,7 @@ public class EnemyController : MonoBehaviour
 
                 if (controller.EnemySeesPlayer())
                 {
-                    controller.ChangeState(controller.alertState);
+                    controller.ChangeState(controller.chaseState);
                     yield break;
                 }
                 yield return null;
