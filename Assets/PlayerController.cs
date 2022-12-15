@@ -2,19 +2,37 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    public float speed = 10.0f;
-    public float rotationSpeed = 100.0f;
+    public float forwardInput;
+    public float strafeInput;
+    public Transform camera;
+    public float gravity = 9.81f;
+    public float verticalVelocity;
+    public float jumpForce = 10f;
+
+    private CharacterController cc;
+
+    private void Start()
+    {
+        cc = GetComponent<CharacterController>();
+    }
+
 
     void Update()
     {
-        float translation = Input.GetAxis("Vertical") * speed;
-        float rotation = Input.GetAxis("Horizontal") * rotationSpeed;
-        translation *= Time.deltaTime;
-        rotation *= Time.deltaTime;
-        transform.Translate(0, 0, translation);
-        transform.Rotate(0, rotation, 0);
+        //get input values
+        forwardInput = Input.GetAxis("Vertical");
+        strafeInput = Input.GetAxis("Horizontal");
+    }
 
-        // turn player controller towards camera direction
-        transform.forward = Camera.main.transform.forward;
+
+    void FixedUpdate()
+    {
+        //move the player
+        transform.position += transform.forward * forwardInput * Time.deltaTime;
+        transform.position += transform.right * strafeInput * Time.deltaTime;
+
+        Vector3 cameraForward = camera.forward;
+        cameraForward.y = 0;
+        transform.rotation = Quaternion.LookRotation(cameraForward);
     }
 }
