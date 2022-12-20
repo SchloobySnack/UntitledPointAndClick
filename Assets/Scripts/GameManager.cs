@@ -6,6 +6,24 @@ public class GameManager : MonoBehaviour
 {
     public NavMeshAgent playerNavMeshAgent;
     
+    // Declare a static instance of the GameManager class
+    public static GameManager instance;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        if (instance != null)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            instance = this;
+            DontDestroyOnLoad(gameObject);
+        }
+    }
+
+    
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
