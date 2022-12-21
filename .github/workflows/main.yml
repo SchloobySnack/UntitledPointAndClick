@@ -3,7 +3,7 @@ name: Build project
 on: [push, pull_request]
 
 env :
-  UNITY_LICENSE: ${{ secrets.UNITY_SERIAL }}
+  UNITY_LICENSE: ${{ secrets.UNITY_LICENSE }}
 
 jobs:
   checkLicense:
@@ -11,5 +11,5 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Fail - No License
-        if: ${{ !startsWith(env.UNITY_SERIAL, '<') }}
+        if: ${{ !startsWith(env.UNITY_LICENSE, '<') }}
         run: exit 1
