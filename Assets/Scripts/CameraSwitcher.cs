@@ -11,7 +11,6 @@ public class CameraSwitcher : MonoBehaviour
         // Check if the colliding object has the "Player" tag
         if (collider.gameObject.tag == "Player")
         {
-            Debug.Log("Player ran into me");
             // Get a reference to the GameManager in the scene
             GameManager gameManager = FindObjectOfType<GameManager>();
 
