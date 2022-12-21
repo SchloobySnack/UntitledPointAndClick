@@ -74,5 +74,18 @@ public class GameManager : MonoBehaviour
         uiCanvas.gameObject.SetActive(isPaused);
     }
 
+    public void SwitchActiveCamera(Camera newActiveCamera)
+    {
+        // Deactivate all cameras in the scene
+        Camera[] allCameras = Camera.allCameras;
+        foreach (Camera camera in allCameras)
+        {
+            camera.gameObject.SetActive(false);
+        }
+
+        // Activate the new active camera
+        newActiveCamera.gameObject.SetActive(true);
+    }
+
 }
 
