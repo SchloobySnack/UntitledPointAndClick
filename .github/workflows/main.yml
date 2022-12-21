@@ -12,4 +12,4 @@ jobs:
     steps:
       - name: Fail - No License
         if: ${{ !startsWith(evn.UNITY_LICENSE, '<') }}
-        RUN: exit 1
+        run: exit 1
