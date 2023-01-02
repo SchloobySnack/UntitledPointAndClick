@@ -11,7 +11,7 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
 
     // Declare a public field for the UI canvas
-    public Canvas uiCanvas;
+    public Transform uiCanvas;
     // Declare a flag to track the pause state
     bool isPaused = false;
 
@@ -26,11 +26,11 @@ public class GameManager : MonoBehaviour
         {
             instance = this;
             // Access the UI canvas from the GameManager
-                    // Find the Canvas GameObject
+            // Find the Canvas GameObject
             GameObject canvasObject = GameObject.Find("Canvas");
 
             // Get the Canvas component from the Canvas GameObject
-            uiCanvas = canvasObject.GetComponent<Canvas>();
+            uiCanvas =  canvasObject.transform.Find("PauseMenu");
             DontDestroyOnLoad(gameObject);
         }
     }
@@ -45,10 +45,23 @@ public class GameManager : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 Vector3 targetLocation = hit.point;
+                GameObject interactable = hit.transform.gameObject;
 
+                
+                
+                if (interactable.tag == "Interactable")
+                {
+                    interactable.SendMessage("Interact");
+                }
                 // Set the target position for the nav mesh agent
-                playerNavMeshAgent.SetDestination(targetLocation);
+                if (interactable.tag== "Ground")
+                {
+                    playerNavMeshAgent.SetDestination(targetLocation);
+                    Debug.Log("Yep");    
+                }
+                
             }
+                
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -60,6 +73,12 @@ public class GameManager : MonoBehaviour
     public void LoadLevel(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
+    }
+
+    public void navToTarget(Transform target)
+    {
+        playerNavMeshAgent.SetDestination(target.position);
+        // Debug.Log("Interact! " + target.position);
     }
     // Pause function
     void Pause()
