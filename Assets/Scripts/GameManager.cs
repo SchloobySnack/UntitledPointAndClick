@@ -106,5 +106,25 @@ public class GameManager : MonoBehaviour
         newActiveCamera.gameObject.SetActive(true);
     }
 
+    public GameObject GetNearestToPlayer(List<GameObject> gameObjects)
+    {
+        GameObject player = GameObject.Find("Player");
+
+        GameObject closestGameObject = null;
+        float closestDistance = Mathf.Infinity;
+
+        foreach (GameObject gameObject in gameObjects)
+        {
+            float distance = Vector3.Distance(gameObject.transform.position, player.transform.position);
+            if (distance < closestDistance)
+            {
+                closestGameObject = gameObject;
+                closestDistance = distance;
+            }
+        }
+        
+        return closestGameObject;
+    }
+
 }
 
