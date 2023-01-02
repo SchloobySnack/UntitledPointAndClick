@@ -6,7 +6,6 @@ public class Interactable : MonoBehaviour {
 
     public GameObject findNearestInteractionZone()
     {
-        Debug.Log("test");
         return GameManager.instance.GetNearestToPlayer(FindChildsWithTag("InteractionZone"));
     }
 
@@ -18,7 +17,6 @@ public class Interactable : MonoBehaviour {
             if (t.tag == tag)
             {
                 children.Add(t.gameObject);
-                Debug.Log(t.transform.position);
             }
             
             

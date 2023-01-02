@@ -57,7 +57,6 @@ public class GameManager : MonoBehaviour
                 if (interactable.tag== "Ground")
                 {
                     playerNavMeshAgent.SetDestination(targetLocation);
-                    Debug.Log("Yep");    
                 }
                 
             }
