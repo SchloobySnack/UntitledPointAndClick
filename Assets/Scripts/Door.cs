@@ -6,8 +6,6 @@ public class Door : Interactable
     public Animator animator;
     //private variables
     private bool isOpen;
-    public GameObject targetLocation;
-
     // private functions
 
     private void OpenDoor()
@@ -22,7 +20,7 @@ public class Door : Interactable
     
 
     //public functions
-    public void Interact()
+    public void trigger()
     {
         isOpen = !isOpen;
         
@@ -34,8 +32,6 @@ public class Door : Interactable
         {
             animator.SetBool("isOpen", isOpen);
         }
-        targetLocation = findNearestInteractionZone();
-        GameManager.instance.SendMessage("navToTarget", targetLocation.transform);
 
     }
 }
