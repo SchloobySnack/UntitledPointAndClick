@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using System.Collections.Generic;
 public class Door : Interactable
 {
     
@@ -34,9 +34,8 @@ public class Door : Interactable
         {
             animator.SetBool("isOpen", isOpen);
         }
-
+        targetLocation = findNearestInteractionZone();
         GameManager.instance.SendMessage("navToTarget", targetLocation.transform);
 
     }
-
 }
