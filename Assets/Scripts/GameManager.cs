@@ -14,6 +14,7 @@ public class GameManager : MonoBehaviour
     public Transform uiCanvas;
     // Declare a flag to track the pause state
     bool isPaused = false;
+    public IEnumerator task;
 
     // Start is called before the first frame update
     void Start()
@@ -40,6 +41,12 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
+            if (!(GameManager.instance.task == null))
+            {
+                StopCoroutine(GameManager.instance.task);
+                playerNavMeshAgent.ResetPath();
+                GameManager.instance.task = null;
+            }
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
             if (Physics.Raycast(ray, out hit))
@@ -47,11 +54,9 @@ public class GameManager : MonoBehaviour
                 Vector3 targetLocation = hit.point;
                 GameObject interactable = hit.transform.gameObject;
 
-                
-                
                 if (interactable.tag == "Interactable")
                 {
-                    interactable.SendMessage("Interact");
+                    interactable.SendMessage("Interact", interactable);
                 }
                 // Set the target position for the nav mesh agent
                 if (interactable.tag== "Ground")
