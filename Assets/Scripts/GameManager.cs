@@ -6,6 +6,7 @@ using UnityEngine.SceneManagement;
 public class GameManager : MonoBehaviour 
 {
     public NavMeshAgent playerNavMeshAgent;
+    public bool debug;
     
     // Declare a static instance of the GameManager class
     public static GameManager instance;
@@ -15,6 +16,9 @@ public class GameManager : MonoBehaviour
     // Declare a flag to track the pause state
     bool isPaused = false;
     public IEnumerator task;
+    private NavMeshPath PlayerPath;
+
+    LineRenderer lineRenderer;
 
     // Start is called before the first frame update
     void Start()
@@ -34,6 +38,8 @@ public class GameManager : MonoBehaviour
             uiCanvas =  canvasObject.transform.Find("PauseMenu");
             DontDestroyOnLoad(gameObject);
         }
+
+        lineRenderer = GetComponent<LineRenderer>();
     }
 
     
@@ -49,6 +55,34 @@ public class GameManager : MonoBehaviour
             // Fire the Pause function
             Pause();
         }
+
+        if (debug)
+        {
+            // Some debug stuff, mainly draws a line showing the current path.
+            if (!(PlayerPath == null))
+            {
+                Vector3[] waypoints = PlayerPath.corners;
+            
+
+                if (waypoints.Length > 0) {
+                    // Set the positions of the LineRenderer to the array of waypoints
+                    lineRenderer.positionCount = waypoints.Length;
+                    lineRenderer.SetPositions(waypoints);
+                } else {
+                    // If the agent doesn't have a path, hide the LineRenderer
+                    lineRenderer.positionCount = 0;
+                }
+            }
+            
+        }
+
+        if (PlayerPath == null)
+        {
+            PlayerPath = playerNavMeshAgent.path;
+        }
+
+
+
     }
 
     private void playerAction(IEnumerator task)
@@ -61,7 +95,9 @@ public class GameManager : MonoBehaviour
             if (Physics.Raycast(ray, out hit))
             {
                 startNewTask(hit);
+                return;
             }
+            PlayerPath = null;
         }
     }
 
@@ -101,7 +137,17 @@ public class GameManager : MonoBehaviour
 
     public void navToTarget(Transform target, Vector3 targetPosition)
     {
-        playerNavMeshAgent.SetDestination(targetPosition);
+        Vector3[] waypoints = PlayerPath.corners;
+        
+        // looking at the first waypoint position in one frame. May want to tween this later.
+        playerNavMeshAgent.transform.LookAt(waypoints[0]);
+        playerNavMeshAgent.CalculatePath(targetPosition, PlayerPath);
+        if (!(PlayerPath.status == NavMeshPathStatus.PathComplete))
+        {
+            PlayerPath = null;
+            return;
+        }
+        
     }
     // Pause function
     void Pause()
