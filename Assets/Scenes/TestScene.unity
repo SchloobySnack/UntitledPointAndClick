@@ -944,7 +944,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 593775896}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -8.810167, y: 8.38, z: -0.36}
+  m_LocalPosition: {x: -8.810167, y: 2.86, z: -0.36}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 1
   m_Children: []
@@ -1293,7 +1293,7 @@ GameObject:
   m_Component:
   - component: {fileID: 805039405}
   m_Layer: 0
-  m_Name: InteractionZone (1)
+  m_Name: InteractionZone
   m_TagString: InteractionZone
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
