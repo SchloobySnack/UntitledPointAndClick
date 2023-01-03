@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // Player clicked so move or interact with something
-            playerAction();                
+            playerAction(GameManager.instance.task);                
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -51,32 +51,40 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void playerAction()
+    private void playerAction(IEnumerator task)
     {
-        if (!(GameManager.instance.task == null))
+        if (readyForTask(task))
         {
-            StopCoroutine(GameManager.instance.task);
-            playerNavMeshAgent.ResetPath();
-            GameManager.instance.task = null;
-        }
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            Vector3 targetLocation = hit.point;
-            GameObject interactable = hit.transform.gameObject;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            if (Physics.Raycast(ray, out hit))
+            {
+                Vector3 targetLocation = hit.point;
+                GameObject interactable = hit.transform.gameObject;
 
-            if (interactable.tag == "Interactable")
-            {
-                interactable.SendMessage("Interact", interactable);
+                if (interactable.tag == "Interactable")
+                {
+                    interactable.SendMessage("Interact", interactable);
+                }
+                // Set the target position for the nav mesh agent
+                if (interactable.tag== "Ground")
+                {
+                    playerNavMeshAgent.SetDestination(targetLocation);
+                }
+                
             }
-            // Set the target position for the nav mesh agent
-            if (interactable.tag== "Ground")
-            {
-                playerNavMeshAgent.SetDestination(targetLocation);
-            }
-            
         }
+    }
+
+    private bool readyForTask(IEnumerator task)
+    {
+        if (!(task == null))
+        {
+            StopCoroutine(task);
+        }        
+        playerNavMeshAgent.ResetPath();
+        GameManager.instance.task = null;
+        return true;
     }
     public void LoadLevel(string sceneName)
     {
