@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class Observable : Interactable
 {
     public Animation animation;
+    public string thought;
     private bool isPlaying;
     public void trigger()
     {
-        string thought = "Hmm, It Appears to be a box.";
         StartCoroutine(displayThought(thought));
     }        
 

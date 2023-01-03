@@ -2173,9 +2173,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de6423279900ac44f90ffcdc67f1473c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  type: 
+  type: It's a simple box.
   gameManager: {fileID: 445027166}
   animation: {fileID: 1249104511}
+  thought: It's a box...
 --- !u!65 &1650974099
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2590,6 +2591,7 @@ MonoBehaviour:
   type: 
   gameManager: {fileID: 445027166}
   animation: {fileID: 1249104511}
+  thought: OH! It's another box!
 --- !u!1 &1691518795
 GameObject:
   m_ObjectHideFlags: 0
