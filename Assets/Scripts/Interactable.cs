@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class Interactable : MonoBehaviour {
     public string type;
-    private GameManager gameManager;
+    public GameManager gameManager;
 
     void Update()
     {

@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.SceneManagement;
+using TMPro;
 public class GameManager : MonoBehaviour 
 {
     public NavMeshAgent playerNavMeshAgent;
     public bool debug;
-    
+    public TextMeshProUGUI innerThought;
     // Declare a static instance of the GameManager class
     public static GameManager instance;
 
