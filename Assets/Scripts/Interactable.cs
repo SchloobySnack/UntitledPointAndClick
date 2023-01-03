@@ -5,10 +5,20 @@ using System.Collections.Generic;
 
 public class Interactable : MonoBehaviour {
     public string type;
+    private GameManager gameManager;
+
+    void Update()
+    {
+        if (gameManager == null)
+        {
+            gameManager = GameManager.instance.GetComponent<GameManager>();
+        }
+        
+    }
 
     public GameObject findNearestInteractionZone()
     {
-        return GameManager.instance.GetNearestToPlayer(FindChildsWithTag("InteractionZone"));
+        return gameManager.GetNearestToPlayer(FindChildsWithTag("InteractionZone"));
     }
 
     public List<GameObject> FindChildsWithTag(string tag)
@@ -27,28 +37,19 @@ public class Interactable : MonoBehaviour {
         return children;
     }
 
-    public void Interact(GameObject interactable)
-    {
-        if (!(GameManager.instance.task == null))
-        {
-            StopCoroutine(GameManager.instance.task);
-            GameManager.instance.task = null;
-        }
-        if (GameManager.instance.task == null)
-        {
-            GameManager.instance.task = Trigger(interactable);
-            GameObject targetLocation = findNearestInteractionZone();
-            GameManager.instance.SendMessage("navToTarget", targetLocation.transform);
-            StartCoroutine(GameManager.instance.task);
-        }
-        
+    public void Interact(RaycastHit hit)
+    {    
+        GameObject interactable = hit.transform.gameObject;
+        gameManager.navToTarget(interactable.transform, findNearestInteractionZone().transform.position);
+        gameManager.task = Trigger(interactable);
+        StartCoroutine(gameManager.task);      
     }
 
     IEnumerator Trigger(GameObject interactable)
     {
         while(!(GameManager.instance.task == null))
         {
-            NavMeshAgent mNavMeshAgent = GameManager.instance.playerNavMeshAgent;
+            NavMeshAgent mNavMeshAgent = gameManager.playerNavMeshAgent;
             if (!mNavMeshAgent.pathPending)
             {
                 if (mNavMeshAgent.remainingDistance <= mNavMeshAgent.stoppingDistance)
@@ -56,7 +57,7 @@ public class Interactable : MonoBehaviour {
                     if (!mNavMeshAgent.hasPath || mNavMeshAgent.velocity.sqrMagnitude == 0f)
                     {
                         interactable.SendMessage("trigger");
-                        GameManager.instance.task = null;
+                        gameManager.task = null;
                         yield break;
                     }
                 }
