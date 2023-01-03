@@ -41,31 +41,8 @@ public class GameManager : MonoBehaviour
     {
         if (Input.GetMouseButtonDown(0))
         {
-            if (!(GameManager.instance.task == null))
-            {
-                StopCoroutine(GameManager.instance.task);
-                playerNavMeshAgent.ResetPath();
-                GameManager.instance.task = null;
-            }
-            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
-            {
-                Vector3 targetLocation = hit.point;
-                GameObject interactable = hit.transform.gameObject;
-
-                if (interactable.tag == "Interactable")
-                {
-                    interactable.SendMessage("Interact", interactable);
-                }
-                // Set the target position for the nav mesh agent
-                if (interactable.tag== "Ground")
-                {
-                    playerNavMeshAgent.SetDestination(targetLocation);
-                }
-                
-            }
-                
+            // Player clicked so move or interact with something
+            playerAction();                
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -74,6 +51,33 @@ public class GameManager : MonoBehaviour
         }
     }
 
+    private void playerAction()
+    {
+        if (!(GameManager.instance.task == null))
+        {
+            StopCoroutine(GameManager.instance.task);
+            playerNavMeshAgent.ResetPath();
+            GameManager.instance.task = null;
+        }
+        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit))
+        {
+            Vector3 targetLocation = hit.point;
+            GameObject interactable = hit.transform.gameObject;
+
+            if (interactable.tag == "Interactable")
+            {
+                interactable.SendMessage("Interact", interactable);
+            }
+            // Set the target position for the nav mesh agent
+            if (interactable.tag== "Ground")
+            {
+                playerNavMeshAgent.SetDestination(targetLocation);
+            }
+            
+        }
+    }
     public void LoadLevel(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
