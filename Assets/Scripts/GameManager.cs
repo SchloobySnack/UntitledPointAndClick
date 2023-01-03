@@ -57,23 +57,30 @@ public class GameManager : MonoBehaviour
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             RaycastHit hit;
+            Physics.Raycast(ray, out hit);
             if (Physics.Raycast(ray, out hit))
             {
-                Vector3 targetLocation = hit.point;
-                GameObject interactable = hit.transform.gameObject;
-
-                if (interactable.tag == "Interactable")
-                {
-                    interactable.SendMessage("Interact", interactable);
-                }
-                // Set the target position for the nav mesh agent
-                if (interactable.tag== "Ground")
-                {
-                    playerNavMeshAgent.SetDestination(targetLocation);
-                }
-                
+                startNewTask(hit);
             }
         }
+    }
+
+    private void startNewTask(RaycastHit hit)
+    {
+
+        Vector3 targetLocation = hit.point;
+        GameObject interactable = hit.transform.gameObject;
+
+        if (interactable.tag == "Interactable")
+        {
+            interactable.SendMessage("Interact", interactable);
+        }
+        // Set the target position for the nav mesh agent
+        if (interactable.tag== "Ground")
+        {
+            playerNavMeshAgent.SetDestination(targetLocation);
+        }
+                
     }
 
     private bool readyForTask(IEnumerator task)
@@ -94,7 +101,6 @@ public class GameManager : MonoBehaviour
     public void navToTarget(Transform target)
     {
         playerNavMeshAgent.SetDestination(target.position);
-        // Debug.Log("Interact! " + target.position);
     }
     // Pause function
     void Pause()
