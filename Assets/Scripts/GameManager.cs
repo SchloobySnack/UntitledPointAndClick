@@ -137,17 +137,18 @@ public class GameManager : MonoBehaviour
 
     public void navToTarget(Transform target, Vector3 targetPosition)
     {
-        Vector3[] waypoints = PlayerPath.corners;
-        
-        // looking at the first waypoint position in one frame. May want to tween this later.
-        playerNavMeshAgent.transform.LookAt(waypoints[0]);
+
         playerNavMeshAgent.CalculatePath(targetPosition, PlayerPath);
         if (!(PlayerPath.status == NavMeshPathStatus.PathComplete))
         {
             PlayerPath = null;
             return;
         }
+        Vector3[] waypoints = PlayerPath.corners;
         
+        // looking at the first waypoint position in one frame. May want to tween this later.
+        playerNavMeshAgent.transform.LookAt(targetPosition);
+        playerNavMeshAgent.SetPath(PlayerPath);
     }
     // Pause function
     void Pause()
