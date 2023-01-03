@@ -1918,6 +1918,10 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -7511558181221131132, guid: ae53488e4fa7aae46a8f4a9e7ccd7b52, type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: -7511558181221131132, guid: ae53488e4fa7aae46a8f4a9e7ccd7b52, type: 3}
       propertyPath: m_ImportantGI
       value: 1
       objectReference: {fileID: 0}
