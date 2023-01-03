@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             // Player clicked so move or interact with something
-            playerAction();                
+            playerAction(GameManager.instance.task);                
         }
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -51,42 +51,57 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    private void playerAction()
+    private void playerAction(IEnumerator task)
     {
-        if (!(GameManager.instance.task == null))
+        if (readyForTask(task))
         {
-            StopCoroutine(GameManager.instance.task);
-            playerNavMeshAgent.ResetPath();
-            GameManager.instance.task = null;
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            RaycastHit hit;
+            Physics.Raycast(ray, out hit);
+            if (Physics.Raycast(ray, out hit))
+            {
+                startNewTask(hit);
+            }
         }
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit))
-        {
-            Vector3 targetLocation = hit.point;
-            GameObject interactable = hit.transform.gameObject;
+    }
 
-            if (interactable.tag == "Interactable")
-            {
-                interactable.SendMessage("Interact", interactable);
-            }
-            // Set the target position for the nav mesh agent
-            if (interactable.tag== "Ground")
-            {
-                playerNavMeshAgent.SetDestination(targetLocation);
-            }
-            
+    private void startNewTask(RaycastHit hit)
+    {
+        if (isInteractable(hit.transform.gameObject))
+        {
+            hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
+            return;
         }
+        navToTarget(hit.transform, hit.point);
+    }
+
+    private bool isInteractable(GameObject gameObject)
+    {
+        if (gameObject.tag == "Interactable")
+        {
+            return true;
+        }
+        return false;
+
+    }
+    private bool readyForTask(IEnumerator task)
+    {
+        if (!(task == null))
+        {
+            StopCoroutine(task);
+        }        
+        playerNavMeshAgent.ResetPath();
+        GameManager.instance.task = null;
+        return true;
     }
     public void LoadLevel(string sceneName)
     {
         SceneManager.LoadScene(sceneName);
     }
 
-    public void navToTarget(Transform target)
+    public void navToTarget(Transform target, Vector3 targetPosition)
     {
-        playerNavMeshAgent.SetDestination(target.position);
-        // Debug.Log("Interact! " + target.position);
+        playerNavMeshAgent.SetDestination(targetPosition);
     }
     // Pause function
     void Pause()
