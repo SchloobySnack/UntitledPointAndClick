@@ -17,17 +17,17 @@ namespace HeyAlexi
             
         }
 
-        public GameObject findNearestInteractionZone()
+        public GameObject FindNearestInteractionZone()
         {
             return gameManager.GetNearestToPlayer(FindChildsWithTag("InteractionZone"));
         }
 
         public List<GameObject> FindChildsWithTag(string tag)
         {
-            List<GameObject> children = new List<GameObject>();
+            List<GameObject> children = new();
             foreach (Transform t in transform.parent.transform)
             {
-                if (t.tag == tag)
+                if (t.CompareTag(tag))
                 {
                     children.Add(t.gameObject);
                 }
@@ -41,7 +41,7 @@ namespace HeyAlexi
         public void Interact(RaycastHit hit)
         {    
             GameObject interactable = hit.transform.gameObject;
-            gameManager.navToTarget(interactable.transform, findNearestInteractionZone().transform.position);
+            gameManager.NavToTarget(interactable.transform, FindNearestInteractionZone().transform.position);
             gameManager.task = Trigger(interactable);
             StartCoroutine(gameManager.task);      
         }
@@ -57,7 +57,7 @@ namespace HeyAlexi
                     {
                         if (!mNavMeshAgent.hasPath || mNavMeshAgent.velocity.sqrMagnitude == 0f)
                         {
-                            interactable.SendMessage("trigger");
+                            interactable.SendMessage("Trigger");
                             gameManager.task = null;
                             yield break;
                         }

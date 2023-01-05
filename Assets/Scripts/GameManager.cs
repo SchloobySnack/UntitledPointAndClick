@@ -52,7 +52,7 @@ namespace HeyAlexi
             if (Input.GetMouseButtonDown(0))
             {
                 // Player clicked so move or interact with something
-                playerAction(GameManager.instance.task);
+                PlayerAction(GameManager.instance.task);
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -83,51 +83,44 @@ namespace HeyAlexi
 
             }
 
-            if (PlayerPath == null)
-            {
-                PlayerPath = playerNavMeshAgent.path;
-            }
-
-
-
+            PlayerPath ??= playerNavMeshAgent.path;
         }
 
-        private void playerAction(IEnumerator task)
+        private void PlayerAction(IEnumerator task)
         {
-            if (readyForTask(task))
+            if (ReadyForTask(task))
             {
                 Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                RaycastHit hit;
-                Physics.Raycast(ray, out hit);
-                if (Physics.Raycast(ray, out hit))
+                _ = Physics.Raycast(ray, out _);
+                if (Physics.Raycast(ray, out RaycastHit hit))
                 {
-                    startNewTask(hit);
+                    StartNewTask(hit);
                     return;
                 }
                 PlayerPath = null;
             }
         }
 
-        private void startNewTask(RaycastHit hit)
+        private void StartNewTask(RaycastHit hit)
         {
-            if (isInteractable(hit.transform.gameObject))
+            if (IsInteractable(hit.transform.gameObject))
             {
                 hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
                 return;
             }
-            navToTarget(hit.transform, hit.point);
+            NavToTarget(hit.transform, hit.point);
         }
 
-        private bool isInteractable(GameObject gameObject)
+        private bool IsInteractable(GameObject gameObject)
         {
-            if (gameObject.tag == "Interactable")
+            if (gameObject.CompareTag("Interactable"))
             {
                 return true;
             }
             return false;
 
         }
-        private bool readyForTask(IEnumerator task)
+        private bool ReadyForTask(IEnumerator task)
         {
             if (!(task == null))
             {
@@ -142,16 +135,18 @@ namespace HeyAlexi
             SceneManager.LoadScene(sceneName);
         }
 
-        public void navToTarget(Transform target, Vector3 targetPosition)
+        public void NavToTarget(Transform target, Vector3 targetPosition)
         {
 
+            Debug.Log(target);
             playerNavMeshAgent.CalculatePath(targetPosition, PlayerPath);
             if (!(PlayerPath.status == NavMeshPathStatus.PathComplete))
             {
                 PlayerPath = null;
                 return;
             }
-            Vector3[] waypoints = PlayerPath.corners;
+
+            _ = PlayerPath.corners;
 
             // looking at the first waypoint position in one frame. May want to tween this later.
             playerNavMeshAgent.transform.LookAt(targetPosition);

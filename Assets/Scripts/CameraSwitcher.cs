@@ -11,7 +11,7 @@ namespace HeyAlexi
         private void OnTriggerEnter(Collider collider)
         {
             // Check if the colliding object has the "Player" tag
-            if (collider.gameObject.tag == "Player")
+            if (collider.gameObject.CompareTag("Player"))
             {
                 // Get a reference to the GameManager in the scene
                 GameManager gameManager = FindObjectOfType<GameManager>();

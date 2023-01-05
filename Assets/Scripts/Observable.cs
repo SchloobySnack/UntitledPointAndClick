@@ -7,15 +7,15 @@ namespace HeyAlexi
 {
     public class Observable : Interactable
     {
-        public Animation animation;
+        public new Animation animation;
         public string thought;
         private bool isPlaying;
-        public void trigger()
+        public void Trigger()
         {
-            StartCoroutine(displayThought(thought));
+            StartCoroutine(DisplayThought(thought));
         }        
 
-        IEnumerator displayThought(string thought)
+        IEnumerator DisplayThought(string thought)
         {
             gameManager.innerThought.text = thought;
             isPlaying = true;
