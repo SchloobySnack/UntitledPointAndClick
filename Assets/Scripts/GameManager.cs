@@ -46,7 +46,6 @@ public class GameManager : MonoBehaviour
     
     void Update()
     {
-        Debug.Log("Update was called");
         if (Input.GetMouseButtonDown(0))
         {
             // Player clicked so move or interact with something
