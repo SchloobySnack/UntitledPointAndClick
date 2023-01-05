@@ -1,37 +1,41 @@
 using UnityEngine;
 using System.Collections.Generic;
-public class Door : Interactable
+
+namespace HeyAlexi
 {
-    
-    public Animator animator;
-    //private variables
-    private bool isOpen;
-    // private functions
-
-    private void OpenDoor()
+    public class Door : Interactable
     {
-        isOpen = true;
-    }
-
-    private void CloseDoor()
-    {
-        isOpen = false;
-    }
-    
-
-    //public functions
-    public void trigger()
-    {
-        isOpen = !isOpen;
         
-        if(isOpen)
+        public Animator animator;
+        //private variables
+        private bool isOpen;
+        // private functions
+
+        private void OpenDoor()
         {
-            animator.SetBool("isOpen", isOpen);
-        }
-        else 
-        {
-            animator.SetBool("isOpen", isOpen);
+            isOpen = true;
         }
 
+        private void CloseDoor()
+        {
+            isOpen = false;
+        }
+        
+
+        //public functions
+        public void trigger()
+        {
+            isOpen = !isOpen;
+            
+            if(isOpen)
+            {
+                animator.SetBool("isOpen", isOpen);
+            }
+            else 
+            {
+                animator.SetBool("isOpen", isOpen);
+            }
+
+        }
     }
 }

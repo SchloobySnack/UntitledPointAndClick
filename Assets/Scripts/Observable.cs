@@ -2,37 +2,39 @@ using System.Diagnostics;
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-public class Observable : Interactable
+
+namespace HeyAlexi
 {
-    public Animation animation;
-    public string thought;
-    private bool isPlaying;
-    public void trigger()
+    public class Observable : Interactable
     {
-        StartCoroutine(displayThought(thought));
-    }        
-
-    IEnumerator displayThought(string thought)
-    {
-        gameManager.innerThought.text = thought;
-        isPlaying = true;
-        animation.Play();
-       
-        while(isPlaying)
+        public Animation animation;
+        public string thought;
+        private bool isPlaying;
+        public void trigger()
         {
-            if (gameManager.innerThought.text == null)
+            StartCoroutine(displayThought(thought));
+        }        
+
+        IEnumerator displayThought(string thought)
+        {
+            gameManager.innerThought.text = thought;
+            isPlaying = true;
+            animation.Play();
+        
+            while(isPlaying)
             {
-                yield break;
+                if (gameManager.innerThought.text == null)
+                {
+                    yield break;
+                }
+                yield return null;   
             }
-            yield return null;   
+            gameManager.innerThought.text = null;   
+
         }
-         gameManager.innerThought.text = null;   
-
+        void AnimationCompleted()
+        {
+        isPlaying = false;
+        }
     }
-    void AnimationCompleted()
-    {
-       isPlaying = false;
-    }
-    
-
 }
