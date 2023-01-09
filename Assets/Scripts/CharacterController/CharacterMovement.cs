@@ -1,17 +1,17 @@
 using UnityEngine;
 
 [RequireComponent (typeof (UnityEngine.AI.NavMeshAgent))]
-[RequireComponent (typeof (Animator))]
+// [RequireComponent (typeof (Animator))]
 public class CharacterMovement : MonoBehaviour {
-	Animator anim;
+	// Animator anim;
 	UnityEngine.AI.NavMeshAgent agent;
 	Vector2 smoothDeltaPosition = Vector2.zero;
 	Vector2 velocity = Vector2.zero;
 
 	void Start () {
-		anim = GetComponent<Animator> ();
+		// anim = GetComponent<Animator> ();
 		agent = GetComponent<UnityEngine.AI.NavMeshAgent> ();
-		agent.updatePosition = false;
+		// agent.updatePosition = false;
 	}
 	
 	void Update () {
@@ -32,22 +32,22 @@ public class CharacterMovement : MonoBehaviour {
 
 		bool shouldMove = velocity.magnitude > 0.5f && agent.remainingDistance > agent.radius;
 
-		// Update animation parameters
-		anim.SetBool("move", shouldMove);
-		anim.SetFloat ("velx", velocity.x);
-		anim.SetFloat ("vely", velocity.y);
+		// // Update animation parameters
+		// anim.SetBool("move", shouldMove);
+		// anim.SetFloat ("velx", velocity.x);
+		// anim.SetFloat ("vely", velocity.y);
 
-		LookAt lookAt = GetComponent<LookAt> ();
-		if (lookAt)
-			lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
+		// LookAt lookAt = GetComponent<LookAt> ();
+		// if (lookAt)
+		// 	lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
 
 //		// Pull character towards agent
-//		if (worldDeltaPosition.magnitude > agent.radius)
-//			transform.position = agent.nextPosition - 0.9f*worldDeltaPosition;
+		// if (worldDeltaPosition.magnitude > agent.radius)
+		// 	transform.position = agent.nextPosition - 0.9f*worldDeltaPosition;
 
 		// Pull agent towards character
-		if (worldDeltaPosition.magnitude > agent.radius)
-			agent.nextPosition = transform.position + 0.9f*worldDeltaPosition;
+		// if (worldDeltaPosition.magnitude > agent.radius)
+		// 	agent.nextPosition = transform.position + 0.9f*worldDeltaPosition;
 	}
 
 	void OnAnimatorMove () {
@@ -55,8 +55,8 @@ public class CharacterMovement : MonoBehaviour {
 //		transform.position = agent.nextPosition;
 
 		// Update position based on animation movement using navigation surface height
-		Vector3 position = anim.rootPosition;
-		position.y = agent.nextPosition.y;
-		transform.position = position;
+		// Vector3 position = anim.rootPosition;
+		// position.y = agent.nextPosition.y;
+		// transform.position = position;
 	}
 }

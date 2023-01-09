@@ -52,7 +52,7 @@ namespace HeyAlexi
             if (Input.GetMouseButtonDown(0))
             {
                 // Player clicked so move or interact with something
-                PlayerAction(GameManager.instance.task);
+                PlayerAction(instance.task);
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
@@ -90,25 +90,31 @@ namespace HeyAlexi
         {
             if (ReadyForTask(task))
             {
-                Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-                _ = Physics.Raycast(ray, out _);
-                if (Physics.Raycast(ray, out RaycastHit hit))
-                {
-                    StartNewTask(hit);
-                    return;
-                }
-                PlayerPath = null;
+                GetMouseClickTarget();
+            }
+            else
+            {
+                playerNavMeshAgent.ResetPath();
+                StopNavMeshAgent();
+                GameManager.instance.task = null;
+                StopCoroutine(task);
+                GetMouseClickTarget();
+                return;
             }
         }
 
+        private void GetMouseClickTarget()
+        {
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                StartNewTask(hit);
+            }
+        }
         private void StartNewTask(RaycastHit hit)
         {
-            if (IsInteractable(hit.transform.gameObject))
-            {
-                hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
-                return;
-            }
-            NavToTarget(hit.transform, hit.point);
+            instance.task = Task(hit);
+            StartCoroutine(instance.task);
         }
 
         private bool IsInteractable(GameObject gameObject)
@@ -122,14 +128,29 @@ namespace HeyAlexi
         }
         private bool ReadyForTask(IEnumerator task)
         {
-            if (!(task == null))
+            if (task is null)
+            {
+                return true;
+            }
+            return false;
+
+        }
+
+        // Temporary fix to stop agent from sliding when a new task is assigned
+        private void StopNavMeshAgent()
+        {
+            playerNavMeshAgent.enabled = false;
+            playerNavMeshAgent.enabled = true;
+        }
+        private void StopTask(IEnumerator task)
+        {
+            if (task is not null)
             {
                 StopCoroutine(task);
             }
-            playerNavMeshAgent.ResetPath();
-            GameManager.instance.task = null;
-            return true;
         }
+
+
         public void LoadLevel(string sceneName)
         {
             SceneManager.LoadScene(sceneName);
@@ -137,19 +158,12 @@ namespace HeyAlexi
 
         public void NavToTarget(Transform target, Vector3 targetPosition)
         {
-
-            Debug.Log(target);
             playerNavMeshAgent.CalculatePath(targetPosition, PlayerPath);
             if (!(PlayerPath.status == NavMeshPathStatus.PathComplete))
             {
                 PlayerPath = null;
                 return;
             }
-
-            _ = PlayerPath.corners;
-
-            // looking at the first waypoint position in one frame. May want to tween this later.
-            playerNavMeshAgent.transform.LookAt(targetPosition);
             playerNavMeshAgent.SetPath(PlayerPath);
         }
         // Pause function
@@ -196,6 +210,34 @@ namespace HeyAlexi
             }
 
             return closestGameObject;
+        }
+
+        IEnumerator Task(RaycastHit hit)
+        {
+            if (IsInteractable(hit.transform.gameObject))
+            {
+                hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
+                yield break;
+            }
+            
+            NavToTarget(hit.transform, hit.point);
+
+            while(!(GameManager.instance.task == null))
+            {
+                if (!playerNavMeshAgent.pathPending)
+                {
+                    
+                    if (playerNavMeshAgent.remainingDistance <= playerNavMeshAgent.stoppingDistance)
+                    {
+                        if (!playerNavMeshAgent.hasPath || playerNavMeshAgent.velocity.sqrMagnitude == 0f)
+                        {
+                            instance.task = null;
+                            yield break;
+                        }
+                    }
+                }
+                yield return null;
+            }
         }
 
     }
