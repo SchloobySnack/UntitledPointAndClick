@@ -23,7 +23,7 @@ namespace HeyAlexi
         
 
         //public functions
-        public void trigger()
+        public void Trigger()
         {
             isOpen = !isOpen;
             
