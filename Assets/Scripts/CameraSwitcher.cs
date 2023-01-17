@@ -7,9 +7,30 @@ namespace HeyAlexi
     public class CameraSwitcher : MonoBehaviour
     {
         public Camera newActiveCamera; // Drag the new active camera from the hierarchy onto this public variable in the Inspector
+        Collider[] camTriggers;
+        void Start()
+        {
+            camTriggers = GetComponents<Collider>();
+        }
+        void Update ()
+        {
+            
+        if (newActiveCamera.isActiveAndEnabled) 
+        {
+            foreach(Collider camTrigger in camTriggers) {
+                camTrigger.enabled = false;
+            }
+        } 
+        else
+        {
+            foreach(Collider camTrigger in camTriggers) {
+                camTrigger.enabled = true;
+            }
+        }
+        }
 
         private void OnTriggerEnter(Collider collider)
-        {
+        {;
             // Check if the colliding object has the "Player" tag
             if (collider.gameObject.CompareTag("Player"))
             {

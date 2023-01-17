@@ -214,10 +214,34 @@ namespace HeyAlexi
             return closestGameObject;
         }
 
+        public GameObject GetFurthestToPlayer(List<GameObject> gameObjects)
+        {
+            GameObject player = GameObject.Find("Player");
+
+            GameObject furthestGameObject = null;
+            float furthestDistance = Mathf.Infinity;
+
+            foreach (GameObject gameObject in gameObjects)
+            {
+                float distance = Vector3.Distance(gameObject.transform.position, player.transform.position);
+                if (distance > furthestDistance)
+                {
+                    furthestGameObject = gameObject;
+                    furthestDistance = distance;
+                }
+            }
+
+            return furthestGameObject;
+        }
+
         public bool IsFacingTarget(Transform target)
         {
             Vector3 targetDirection = target.transform.position - player.transform.position;
+            targetDirection.y = 0;
+            Vector3 forward = transform.forward;
+            forward.y = 0;
             float angle = Vector3.Angle(targetDirection, player.transform.forward);
+            Debug.DrawLine(player.transform.position, angle * player.transform.forward);
             return angle < 15f;
         }
 
@@ -240,13 +264,14 @@ namespace HeyAlexi
                 RotateTowardsTarget(hit.transform);
                 yield return null;
             }
-            
+
             if (IsInteractable(hit.transform.gameObject))
             {
                 hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
                 yield break;
             }
-            // NavToTarget(hit.transform, hit.point);
+
+            NavToTarget(hit.transform, hit.point);
 
             while(!(GameManager.instance.task == null))
             {
