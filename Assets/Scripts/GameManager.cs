@@ -10,6 +10,7 @@ namespace HeyAlexi
     public class GameManager : MonoBehaviour
     {
         public NavMeshAgent playerNavMeshAgent;
+        public GameObject player;
         public bool debug;
         public TextMeshProUGUI innerThought;
         // Declare a static instance of the GameManager class
@@ -40,6 +41,7 @@ namespace HeyAlexi
 
                 // Get the Canvas component from the Canvas GameObject
                 uiCanvas = canvasObject.transform.Find("PauseMenu");
+                player = playerNavMeshAgent.gameObject;
                 DontDestroyOnLoad(gameObject);
             }
 
@@ -212,15 +214,39 @@ namespace HeyAlexi
             return closestGameObject;
         }
 
+        public bool IsFacingTarget(Transform target)
+        {
+            Vector3 targetDirection = target.transform.position - player.transform.position;
+            float angle = Vector3.Angle(targetDirection, player.transform.forward);
+            return angle < 15f;
+        }
+
+        public void RotateTowardsTarget(Transform target)
+        {
+            float rotationSpeed = 2.5f;
+            
+            Vector3 targetDirection = target.transform.position - player.transform.position;
+            targetDirection.y = 0;
+            Vector3 forward = transform.forward;
+            forward.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
+        }        
+
         IEnumerator Task(RaycastHit hit)
         {
+            while(!(IsFacingTarget(hit.transform)))
+            {
+                RotateTowardsTarget(hit.transform);
+                yield return null;
+            }
+            
             if (IsInteractable(hit.transform.gameObject))
             {
                 hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
                 yield break;
             }
-            
-            NavToTarget(hit.transform, hit.point);
+            // NavToTarget(hit.transform, hit.point);
 
             while(!(GameManager.instance.task == null))
             {
