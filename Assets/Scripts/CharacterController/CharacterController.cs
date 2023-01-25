@@ -1,25 +1,35 @@
+using System;
 using UnityEngine;
 
-[RequireComponent (typeof (UnityEngine.AI.NavMeshAgent))]
-// [RequireComponent (typeof (Animator))]
+
 
 namespace HeyAlexi
 {
 
+// [RequireComponent (typeof (Animator))]
+[RequireComponent (typeof (UnityEngine.AI.NavMeshAgent))]
 	public class CharacterController : MonoBehaviour
 	{
 		Animator anim;
 		UnityEngine.AI.NavMeshAgent agent;
 		Vector2 smoothDeltaPosition = Vector2.zero;
 		Vector2 velocity = Vector2.zero;
+		private CurrentState currentState;
 
-		void Start () {
+		void Start ()
+		{
 			anim = GetComponentInChildren<Animator> ();
 			agent = GetComponent<UnityEngine.AI.NavMeshAgent> ();
 			// agent.updatePosition = false;
+
+			currentState = new CurrentState(new Idle());
+			currentState.State.Enter();
+
 		}
 		
-		void Update () {
+		void Update ()
+		{
+			currentState.State.Update();
 			Vector3 worldDeltaPosition = agent.destination - transform.position;
 
 			// Map 'worldDeltaPosition' to local space
@@ -55,7 +65,8 @@ namespace HeyAlexi
 	//			agent.nextPosition = transform.position + 0.9f*worldDeltaPosition;
 		}
 
-		void OnAnimatorMove () {
+		void OnAnimatorMove ()
+		{
 			// Update postion to agent position
 	//		transform.position = agent.nextPosition;
 
@@ -68,18 +79,56 @@ namespace HeyAlexi
 
 	public abstract class State
 	{
-		public abstract void Trigger(CurrentState state);
+		public abstract void Enter();
+		public abstract void Update();
+		public abstract void Exit();
+		
 	}
 
 	public class CurrentState
 	{
+		private State state;
 
-	}
+		public CurrentState(State state)
+        {
+            this.State = state;
+        }
+		public State State
+        {
+            get { return state; }
+            set { state = value; }
+        }
 
-	public class idle : State
+		public void Enter()
+		{
+			return;
+		}
+		public void Update()
+		{
+			return;
+		}
+		public void Exit()
+		{
+			return;
+		}
+
+    }
+
+	public class Idle : State
 	{
+		public override void Enter()
+		{
+			return;
+		}
+		public override void Update()
+		{
+			return;
+		}
+		public override void Exit()
+		{
+			return;
+		}
 
 	}
-
 
 }
