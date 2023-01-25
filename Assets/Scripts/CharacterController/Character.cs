@@ -8,7 +8,7 @@ namespace HeyAlexi
 
 // [RequireComponent (typeof (Animator))]
 [RequireComponent (typeof (UnityEngine.AI.NavMeshAgent))]
-	public class CharacterController : MonoBehaviour
+	public class Character : MonoBehaviour
 	{
 		Animator anim;
 		UnityEngine.AI.NavMeshAgent agent;
