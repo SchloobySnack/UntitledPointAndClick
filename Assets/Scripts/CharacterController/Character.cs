@@ -127,4 +127,21 @@ namespace HeyAlexi
 
     }
 
+    public class Move : State
+    {
+        public override void Enter()
+        {
+            Debug.Log("Moving");
+        }
+        public override void Update()
+        {
+            return;
+        }
+        public override void Exit()
+        {
+            return;
+        }
+
+    }
+
 }
