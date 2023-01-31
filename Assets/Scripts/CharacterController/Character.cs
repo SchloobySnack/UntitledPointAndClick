@@ -19,13 +19,12 @@ namespace HeyAlexi
             // agent.updatePosition = false;
 
             currentState = new CurrentState(new Idle());
-            currentState.State.Enter();
 
         }
 
         void Update()
         {
-            currentState.State.Update();
+            currentState.Update(currentState);
             // Vector3 worldDeltaPosition = agent.destination - transform.position;
 
             // // Map 'worldDeltaPosition' to local space
@@ -104,39 +103,43 @@ namespace HeyAlexi
     {   
         public State()
         {
-
+           
         }
 
-        public abstract void Enter();
-        public abstract void Update();
-        public abstract void Exit();
+        public abstract void EnterState(CurrentState state);
+        public abstract void UpdateState(CurrentState state);
+        public abstract void ExitState(CurrentState state);
 
     }
 
     public class CurrentState
     {
-        private State state;
+        private State _State;
 
         public CurrentState(State state)
         {
-            this.State = state;
+            this.State = state;      
         }
         public State State
         {
-            get { return state; }
-            set { state = value; }
+            get { return _State; }
+            set { _State = value; }
         }
 
-        public void Enter()
+        public void Enter(CurrentState state)
         {
+            Debug.Log($"Entered state {state.State}");
+            state.State.EnterState(this);
             return;
         }
-        public void Update()
+        public void Update(CurrentState state)
         {
+            state.State.UpdateState(this);
             return;
         }
-        public void Exit()
+        public void Exit(CurrentState state)
         {
+            state.State.ExitState(this);
             return;
         }
 
@@ -144,18 +147,19 @@ namespace HeyAlexi
 
     public class Idle : State
     {
-        public string name = "Idle";
-
-        public override void Enter()
+        public override void EnterState(CurrentState state)
         {
+            Debug.Log("test");
+            return;
+        }
+        public override void UpdateState(CurrentState state)
+        {
+
+            state.State = new Move();
             
             return;
         }
-        public override void Update()
-        {
-            return;
-        }
-        public override void Exit()
+        public override void ExitState(CurrentState state)
         {
             return;
         }
@@ -164,15 +168,15 @@ namespace HeyAlexi
 
     public class Move : State
     {
-        public override void Enter()
+        public override void EnterState(CurrentState state)
         {
             Debug.Log("Moving");
         }
-        public override void Update()
+        public override void UpdateState(CurrentState state)
         {
             return;
         }
-        public override void Exit()
+        public override void ExitState(CurrentState state)
         {
             return;
         }
