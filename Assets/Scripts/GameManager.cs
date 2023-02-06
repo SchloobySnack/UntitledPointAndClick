@@ -3,13 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using TMPro;
+using HeyAlexi.Character;
 
 namespace HeyAlexi
 {
     public class GameManager : MonoBehaviour
     {
-        [SerializeField] private Character _playerPrefab;
-        private Character player;
+        [SerializeField] private Character.Manager _playerPrefab;
+        private Character.Manager player;
         public TextMeshProUGUI innerThought;
         // Declare a static instance of the GameManager class
         public static GameManager instance;
@@ -46,7 +47,16 @@ namespace HeyAlexi
             {
                 // Player clicked so move or interact with something
                 // PlayerAction(instance.task);
-                player.NavToTarget(GetMouseClickTarget());
+                if (player.currentState is Idle)
+                {
+                    player.NavToTarget(GetMouseClickTarget());
+                }
+                if (player.currentState is Move)
+                {
+                    player.setState(new Idle(player));
+                    player.NavToTarget(GetMouseClickTarget());
+                }
+
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
