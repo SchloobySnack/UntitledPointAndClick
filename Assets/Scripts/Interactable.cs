@@ -38,35 +38,35 @@ namespace HeyAlexi
             return children;
         }
 
-        public void Interact(RaycastHit hit)
-        {    
-            GameObject interactable = hit.transform.gameObject;
-            gameManager.NavToTarget(interactable.transform, FindNearestInteractionZone().transform.position);
-            gameManager.task = Trigger(interactable);
-            StartCoroutine(gameManager.task);      
-        }
+        // public void Interact(RaycastHit hit)
+        // {    
+        //     GameObject interactable = hit.transform.gameObject;
+        //     gameManager.NavToTarget(interactable.transform, FindNearestInteractionZone().transform.position);
+        //     gameManager.task = Trigger(interactable);
+        //     StartCoroutine(gameManager.task);      
+        // }
 
-        IEnumerator Trigger(GameObject interactable)
-        {
-            while(!(GameManager.instance.task == null))
-            {
-                NavMeshAgent mNavMeshAgent = gameManager.playerNavMeshAgent;
-                if (!mNavMeshAgent.pathPending)
-                {
-                    if (mNavMeshAgent.remainingDistance <= mNavMeshAgent.stoppingDistance)
-                    {
-                        if (!mNavMeshAgent.hasPath || mNavMeshAgent.velocity.sqrMagnitude == 0f)
-                        {
-                            interactable.SendMessage("Trigger");
-                            gameManager.task = null;
-                            yield break;
-                        }
-                    }
-                }
-                yield return null;
-            }
+        // IEnumerator Trigger(GameObject interactable)
+        // {
+        //     while(!(GameManager.instance.task == null))
+        //     {
+        //         NavMeshAgent mNavMeshAgent = gameManager.playerNavMeshAgent;
+        //         if (!mNavMeshAgent.pathPending)
+        //         {
+        //             if (mNavMeshAgent.remainingDistance <= mNavMeshAgent.stoppingDistance)
+        //             {
+        //                 if (!mNavMeshAgent.hasPath || mNavMeshAgent.velocity.sqrMagnitude == 0f)
+        //                 {
+        //                     interactable.SendMessage("Trigger");
+        //                     gameManager.task = null;
+        //                     yield break;
+        //                 }
+        //             }
+        //         }
+        //         yield return null;
+        //     }
 
-        }
+        // }
 
     }
 }
