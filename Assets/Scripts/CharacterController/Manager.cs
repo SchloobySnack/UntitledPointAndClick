@@ -6,12 +6,12 @@ namespace HeyAlexi.Character
     public class Manager : MonoBehaviour
     {
         private Animator anim;
-        private NavMeshAgent agent;
+        public NavMeshAgent agent;
         private NavMeshPath playerPath;
         Vector2 smoothDeltaPosition = Vector2.zero;
         Vector2 velocity = Vector2.zero;
         public State currentState;
-        public Transform target;
+        public Vector3 targetPos;
 
         void Start()
         {
@@ -29,34 +29,37 @@ namespace HeyAlexi.Character
 
         public void CharacterMove()
         {
-            Vector3 worldDeltaPosition = agent.destination - transform.position;
+            //Vector3 worldDeltaPosition = agent.destination - transform.position;
 
-            // Map 'worldDeltaPosition' to local space
-            float dx = Vector3.Dot(transform.right, worldDeltaPosition);
-            float dy = Vector3.Dot(transform.forward, worldDeltaPosition);
-            Vector2 deltaPosition = new Vector2(dx, dy);
+            ////// Map 'worldDeltaPosition' to local space
+            //float dx = Vector3.Dot(transform.right, worldDeltaPosition);
+            //float dy = Vector3.Dot(transform.forward, worldDeltaPosition);
+            //Vector2 deltaPosition = new Vector2(dx, dy);
 
-            // Low-pass filter the deltaMove
-            float smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
-            smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, deltaPosition, smooth);
+            //////// Low-pass filter the deltaMove
+            //float smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
+            //smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, deltaPosition, smooth);
 
-            // Update velocity if delta time is safe
-            if (Time.deltaTime > 1e-5f)
-                velocity = smoothDeltaPosition / Time.deltaTime;
+            //// Update velocity if delta time is safe
+            //if (Time.deltaTime > 1e-5f)
+            //    velocity = smoothDeltaPosition / Time.deltaTime;
 
-            bool Moving = velocity.magnitude > 0.01f && agent.remainingDistance > agent.radius;
+            bool Moving = agent.remainingDistance * 2.0f > agent.radius;
 
-            // Update animation parameters
+            //// Update animation parameters
             anim.SetBool("move", Moving);
-            anim.SetFloat("velx", velocity.x);
-            anim.SetFloat("vely", velocity.y);
+            //anim.SetFloat("velx", velocity.x);
+            //anim.SetFloat("vely", velocity.y);
 
-            LookAt lookAt = GetComponent<LookAt>();
-            if (lookAt)
-                lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
+            ////LookAt lookAt = GetComponent<LookAt>();
+            ////if (lookAt)
+            ////    lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
 
             if (!Moving)
+            {
                 setState(new Idle(this));
+            }
+                
 
             //// Pull character towards agent
             //if (worldDeltaPosition.magnitude > agent.radius)
@@ -65,6 +68,12 @@ namespace HeyAlexi.Character
             //// Pull agent towards character
             //if (worldDeltaPosition.magnitude > agent.radius)
             //    agent.nextPosition = transform.position + 0.9f * worldDeltaPosition;
+        }
+
+        public void CharacterStop()
+        {
+            anim.SetBool("move", false);
+
         }
 
         void OnAnimatorMove()
@@ -79,12 +88,11 @@ namespace HeyAlexi.Character
         }
 
         // Transform target, Vector3 targetPosition
-        public void NavToTarget(RaycastHit hit)
+        public void NavToTarget(Vector3 hit)
         {
             playerPath ??= agent.path;
-            target = hit.transform;
-            Vector3 targetPosition = hit.point;
-            if (currentState is Idle)
+            Vector3 targetPosition = hit;
+            if (currentState is not Idle)
             {
                 agent.CalculatePath(targetPosition, playerPath);
                 if (!(agent.path.status == NavMeshPathStatus.PathComplete))
@@ -94,8 +102,29 @@ namespace HeyAlexi.Character
                     return;
                 }
                 agent.SetPath(playerPath);
-                setState(new Move(this));
             }
+        }
+
+        public void SetTarget(RaycastHit hit)
+        {
+            if (IsInteractable(hit.transform.gameObject))
+            {
+                return;
+            }
+            else
+            {
+                if (currentState is Idle)
+                {
+                    targetPos = hit.point;
+                    setState(new Move(this));
+                }
+                if (currentState is Moving)
+                {
+                    setState(new Idle(this));
+                }
+
+            }
+            return;
         }
 
         public void setState(State state)
@@ -118,21 +147,21 @@ namespace HeyAlexi.Character
             return false;
         }
 
-        public bool IsFacingTarget(Transform target)
+        public bool IsFacingPos(Vector3 pos)
         {
-            Vector3 targetDirection = target.transform.position - transform.position;
+            Vector3 targetDirection = pos - transform.position;
             targetDirection.y = 0;
             Vector3 forward = transform.forward;
             forward.y = 0;
             float angle = Vector3.Angle(targetDirection, transform.forward);
             Debug.DrawLine(transform.position, angle * transform.forward);
-            return angle < 15f;
+            return angle < 5f;
         }
-        public void RotateTowardsTarget(Transform target)
+        public void RotateTowardsPos(Vector3 pos)
         {
             float rotationSpeed = 2.5f;
 
-            Vector3 targetDirection = target.transform.position - transform.position;
+            Vector3 targetDirection = pos - transform.position;
             targetDirection.y = 0;
             Vector3 forward = transform.forward;
             forward.y = 0;

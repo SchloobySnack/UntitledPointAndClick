@@ -22,14 +22,17 @@ namespace HeyAlexi.Character
         public override void Enter()
         {
             Debug.Log("Entered Idle");
+            CManager.agent.ResetPath();
+            CManager.agent.isStopped = true;
             return;
         }
         public override void Update()
-        {        
+        {
             return;
         }
         public override void Exit()
         {
+            CManager.agent.isStopped = false;
             Debug.Log("Exited Idle");
             return;
         }
@@ -45,13 +48,13 @@ namespace HeyAlexi.Character
         }
         public override void Update()
         {
-            if (CManager.IsFacingTarget(CManager.target))
+            if (CManager.IsFacingPos(CManager.targetPos))
             {
                 CManager.setState(new Moving(CManager));
             }
             else
             {
-                CManager.RotateTowardsTarget(CManager.target);
+                CManager.RotateTowardsPos(CManager.targetPos);
             }
             return;
         }
@@ -67,6 +70,7 @@ namespace HeyAlexi.Character
         public Moving(Manager manager) : base(manager) { }
         public override void Enter()
         {
+            CManager.NavToTarget(CManager.targetPos);
             Debug.Log("Entered Moving");
         }
         public override void Update()
@@ -76,6 +80,7 @@ namespace HeyAlexi.Character
         }
         public override void Exit()
         {
+            CManager.CharacterStop();
             Debug.Log("Exited Moving");
             return;
         }

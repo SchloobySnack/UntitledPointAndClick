@@ -47,16 +47,7 @@ namespace HeyAlexi
             {
                 // Player clicked so move or interact with something
                 // PlayerAction(instance.task);
-                if (player.currentState is Idle)
-                {
-                    player.NavToTarget(GetMouseClickTarget());
-                }
-                if (player.currentState is Move)
-                {
-                    player.setState(new Idle(player));
-                    player.NavToTarget(GetMouseClickTarget());
-                }
-
+                player.SetTarget(GetMouseClickTarget());
             }
             if (Input.GetKeyDown(KeyCode.Escape))
             {
