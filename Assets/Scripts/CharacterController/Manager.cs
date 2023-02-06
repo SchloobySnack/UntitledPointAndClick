@@ -11,6 +11,7 @@ namespace HeyAlexi.Character
         Vector2 smoothDeltaPosition = Vector2.zero;
         Vector2 velocity = Vector2.zero;
         public State currentState;
+        public Transform target;
 
         void Start()
         {
@@ -81,6 +82,7 @@ namespace HeyAlexi.Character
         public void NavToTarget(RaycastHit hit)
         {
             playerPath ??= agent.path;
+            target = hit.transform;
             Vector3 targetPosition = hit.point;
             if (currentState is Idle)
             {
@@ -113,6 +115,28 @@ namespace HeyAlexi.Character
                 return true;
             }
             return false;
+        }
+
+        public bool IsFacingTarget(Transform target)
+        {
+            Vector3 targetDirection = target.transform.position - transform.position;
+            targetDirection.y = 0;
+            Vector3 forward = transform.forward;
+            forward.y = 0;
+            float angle = Vector3.Angle(targetDirection, transform.forward);
+            Debug.DrawLine(transform.position, angle * transform.forward);
+            return angle < 15f;
+        }
+        public void RotateTowardsTarget(Transform target)
+        {
+            float rotationSpeed = 2.5f;
+
+            Vector3 targetDirection = target.transform.position - transform.position;
+            targetDirection.y = 0;
+            Vector3 forward = transform.forward;
+            forward.y = 0;
+            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
+            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
         }
 
     }

@@ -45,12 +45,38 @@ namespace HeyAlexi.Character
         }
         public override void Update()
         {
-            CManager.CharacterMove();
+            if (CManager.IsFacingTarget(CManager.target))
+            {
+                CManager.setState(new Moving(CManager));
+            }
+            else
+            {
+                CManager.RotateTowardsTarget(CManager.target);
+            }
             return;
         }
         public override void Exit()
         {
             Debug.Log("Exited Move");
+            return;
+        }
+
+    }
+    public class Moving : State
+    {
+        public Moving(Manager manager) : base(manager) { }
+        public override void Enter()
+        {
+            Debug.Log("Entered Moving");
+        }
+        public override void Update()
+        {
+            CManager.CharacterMove();
+            return;
+        }
+        public override void Exit()
+        {
+            Debug.Log("Exited Moving");
             return;
         }
 

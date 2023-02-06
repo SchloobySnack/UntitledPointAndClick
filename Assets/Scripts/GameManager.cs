@@ -171,29 +171,6 @@ namespace HeyAlexi
             return furthestGameObject;
         }
 
-        public bool IsFacingTarget(Transform target)
-        {
-            Vector3 targetDirection = target.transform.position - player.transform.position;
-            targetDirection.y = 0;
-            Vector3 forward = transform.forward;
-            forward.y = 0;
-            float angle = Vector3.Angle(targetDirection, player.transform.forward);
-            Debug.DrawLine(player.transform.position, angle * player.transform.forward);
-            return angle < 15f;
-        }
-
-        public void RotateTowardsTarget(Transform target)
-        {
-            float rotationSpeed = 2.5f;
-            
-            Vector3 targetDirection = target.transform.position - player.transform.position;
-            targetDirection.y = 0;
-            Vector3 forward = transform.forward;
-            forward.y = 0;
-            Quaternion targetRotation = Quaternion.LookRotation(targetDirection);
-            player.transform.rotation = Quaternion.Slerp(player.transform.rotation, targetRotation, rotationSpeed * Time.deltaTime);
-        }        
-
         // IEnumerator Task(RaycastHit hit)
         // {
         //     while(!(IsFacingTarget(hit.transform)))
