@@ -90,6 +90,7 @@ namespace HeyAlexi.Character
                 if (!(agent.path.status == NavMeshPathStatus.PathComplete))
                 {
                     agent.ResetPath();
+                    setState(new Idle(this));
                     return;
                 }
                 agent.SetPath(playerPath);
