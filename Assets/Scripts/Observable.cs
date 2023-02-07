@@ -9,7 +9,7 @@ namespace HeyAlexi
         public new Animation animation;
         public string thought;
         private bool isPlaying;
-        public void Trigger()
+        public override void Trigger()
         {
             StartCoroutine(DisplayThought(thought));
         }        
