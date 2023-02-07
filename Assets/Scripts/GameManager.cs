@@ -124,7 +124,6 @@ namespace HeyAlexi
 
         public GameObject GetNearestToPlayer(List<GameObject> gameObjects)
         {
-            GameObject player = GameObject.Find("Player");
 
             GameObject closestGameObject = null;
             float closestDistance = Mathf.Infinity;
