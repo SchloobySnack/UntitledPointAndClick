@@ -61,6 +61,7 @@ namespace HeyAlexi.Character
                 if (InteractTarget)
                 {
                     InteractTarget.Trigger();
+                    InteractTarget = null;
                 }
                 setState(new Idle(this));
             }
