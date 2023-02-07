@@ -11,6 +11,7 @@ namespace HeyAlexi.Character
         Vector2 smoothDeltaPosition = Vector2.zero;
         Vector2 velocity = Vector2.zero;
         public State currentState;
+        public Interactable InteractTarget;
         public Vector3 targetPos;
 
         void Start()
@@ -57,6 +58,10 @@ namespace HeyAlexi.Character
 
             if (!Moving)
             {
+                if (InteractTarget)
+                {
+                    InteractTarget.Trigger();
+                }
                 setState(new Idle(this));
             }
                 
@@ -108,7 +113,11 @@ namespace HeyAlexi.Character
         public void SetTarget(RaycastHit hit)
         {
             if (IsInteractable(hit.transform.gameObject))
-            {
+            {              
+                InteractTarget = hit.transform.gameObject.GetComponent<Interactable>();
+                GameObject target = InteractTarget.FindNearestInteractionZone();
+                targetPos = target.transform.position;
+                setState(new Move(this));
                 return;
             }
             else
