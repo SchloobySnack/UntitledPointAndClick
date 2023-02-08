@@ -18,7 +18,9 @@ namespace HeyAlexi.Character
         {
             anim = GetComponentInChildren<Animator>();
             agent = GetComponent<UnityEngine.AI.NavMeshAgent>();
-            // agent.updatePosition = false;
+            agent.updatePosition = false;
+            anim.applyRootMotion = true;
+            agent.updateRotation = false;
             currentState = new Idle(this);
             currentState.Enter();
         }
@@ -30,31 +32,32 @@ namespace HeyAlexi.Character
 
         public void CharacterMove()
         {
-            //Vector3 worldDeltaPosition = agent.destination - transform.position;
+            Vector3 worldDeltaPosition = agent.destination - transform.position;
+            worldDeltaPosition.y = 0;
 
             ////// Map 'worldDeltaPosition' to local space
-            //float dx = Vector3.Dot(transform.right, worldDeltaPosition);
-            //float dy = Vector3.Dot(transform.forward, worldDeltaPosition);
-            //Vector2 deltaPosition = new Vector2(dx, dy);
+            float dx = Vector3.Dot(transform.right, worldDeltaPosition);
+            float dy = Vector3.Dot(transform.forward, worldDeltaPosition);
+            Vector2 deltaPosition = new Vector2(dx, dy);
 
             //////// Low-pass filter the deltaMove
-            //float smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
-            //smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, deltaPosition, smooth);
+            float smooth = Mathf.Min(1.0f, Time.deltaTime / 0.15f);
+            smoothDeltaPosition = Vector2.Lerp(smoothDeltaPosition, deltaPosition, smooth);
 
             //// Update velocity if delta time is safe
-            //if (Time.deltaTime > 1e-5f)
-            //    velocity = smoothDeltaPosition / Time.deltaTime;
+            if (Time.deltaTime > 1e-5f)
+                velocity = smoothDeltaPosition / Time.deltaTime;
 
             bool Moving = agent.remainingDistance * 2.0f > agent.radius;
 
             //// Update animation parameters
             anim.SetBool("move", Moving);
-            //anim.SetFloat("velx", velocity.x);
-            //anim.SetFloat("vely", velocity.y);
+            anim.SetFloat("velx", velocity.x);
+            anim.SetFloat("vely", velocity.y);
 
-            ////LookAt lookAt = GetComponent<LookAt>();
-            ////if (lookAt)
-            ////    lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
+            LookAt lookAt = GetComponent<LookAt>();
+            if (lookAt)
+                lookAt.lookAtTargetPosition = agent.steeringTarget + transform.forward;
 
             if (!Moving)
             {
@@ -65,15 +68,18 @@ namespace HeyAlexi.Character
                 }
                 setState(new Idle(this));
             }
-                
+
 
             //// Pull character towards agent
-            //if (worldDeltaPosition.magnitude > agent.radius)
-            //    transform.position = agent.nextPosition - 0.9f * worldDeltaPosition;
-
-            //// Pull agent towards character
-            //if (worldDeltaPosition.magnitude > agent.radius)
-            //    agent.nextPosition = transform.position + 0.9f * worldDeltaPosition;
+            if (worldDeltaPosition.magnitude > agent.radius / 2f)
+            {
+                transform.position = Vector3.Lerp
+                (
+                    anim.rootPosition,
+                    agent.nextPosition,
+                    smooth
+                );
+            }
         }
 
         public void CharacterStop()
@@ -85,12 +91,14 @@ namespace HeyAlexi.Character
         void OnAnimatorMove()
         {
             // Update postion to agent position
-            //		transform.position = agent.nextPosition;
+            transform.position = agent.nextPosition;
 
             // Update position based on animation movement using navigation surface height
-            // Vector3 position = anim.rootPosition;
-            // position.y = agent.nextPosition.y;
-            // transform.position = position;
+            Vector3 position = anim.rootPosition;
+            position.y = agent.nextPosition.y;
+            transform.position = position;
+            transform.rotation = anim.rootRotation;
+
         }
 
         // Transform target, Vector3 targetPosition
