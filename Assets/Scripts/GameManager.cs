@@ -176,40 +176,5 @@ namespace HeyAlexi
             // Show or hide the pause menu based on the pause state
             ItemMenu.gameObject.SetActive(true);
         }
-
-        // IEnumerator Task(RaycastHit hit)
-        // {
-        //     while(!(IsFacingTarget(hit.transform)))
-        //     {
-        //         RotateTowardsTarget(hit.transform);
-        //         yield return null;
-        //     }
-
-        //     if (IsInteractable(hit.transform.gameObject))
-        //     {
-        //         hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
-        //         yield break;
-        //     }
-
-        //     NavToTarget(hit.transform, hit.point);
-
-        //     while(!(GameManager.instance.task == null))
-        //     {
-        //         if (!playerNavMeshAgent.pathPending)
-        //         {
-
-        //             if (playerNavMeshAgent.remainingDistance <= playerNavMeshAgent.stoppingDistance)
-        //             {
-        //                 if (!playerNavMeshAgent.hasPath || playerNavMeshAgent.velocity.sqrMagnitude == 0f)
-        //                 {
-        //                     instance.task = null;
-        //                     yield break;
-        //                 }
-        //             }
-        //         }
-        //         yield return null;
-        //     }
-        // }
-
     }
 }
