@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 namespace HeyAlexi
 {
-    public class Interactable : MonoBehaviour {
+    public abstract class Interactable : MonoBehaviour {
         public string type;
         public GameManager gameManager;
 
@@ -37,6 +37,8 @@ namespace HeyAlexi
 
             return children;
         }
+
+        public abstract void Trigger();
 
         // public void Interact(RaycastHit hit)
         // {    
