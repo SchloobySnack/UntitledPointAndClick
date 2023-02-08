@@ -167,13 +167,13 @@ namespace HeyAlexi
 
         public void ExitItemMenu()
         {
-            // Show or hide the pause menu based on the pause state
+            // Show or hide the item menu
             ItemMenu.gameObject.SetActive(false);
         }
 
         public void OpenItemMenu()
         {
-            // Show or hide the pause menu based on the pause state
+            // Show or hide the item menu
             ItemMenu.gameObject.SetActive(true);
         }
     }
