@@ -58,31 +58,6 @@ namespace HeyAlexi
                 // Fire the Pause function
                 Pause();
             }
-
-            // if (debug)
-            // {
-            //     // Some debug stuff, mainly draws a line showing the current path.
-            //     if (!(player.agent.PlayerPath == null))
-            //     {
-            //         Vector3[] waypoints = PlayerPath.corners;
-
-
-            //         if (waypoints.Length > 0)
-            //         {
-            //             // Set the positions of the LineRenderer to the array of waypoints
-            //             lineRenderer.positionCount = waypoints.Length;
-            //             lineRenderer.SetPositions(waypoints);
-            //         }
-            //         else
-            //         {
-            //             // If the agent doesn't have a path, hide the LineRenderer
-            //             lineRenderer.positionCount = 0;
-            //         }
-            //     }
-
-            // }
-
-            // PlayerPath ??= playerNavMeshAgent.path;
         }
 
         private RaycastHit GetMouseClickTarget()
