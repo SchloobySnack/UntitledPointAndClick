@@ -58,31 +58,6 @@ namespace HeyAlexi
                 // Fire the Pause function
                 Pause();
             }
-
-            // if (debug)
-            // {
-            //     // Some debug stuff, mainly draws a line showing the current path.
-            //     if (!(player.agent.PlayerPath == null))
-            //     {
-            //         Vector3[] waypoints = PlayerPath.corners;
-
-
-            //         if (waypoints.Length > 0)
-            //         {
-            //             // Set the positions of the LineRenderer to the array of waypoints
-            //             lineRenderer.positionCount = waypoints.Length;
-            //             lineRenderer.SetPositions(waypoints);
-            //         }
-            //         else
-            //         {
-            //             // If the agent doesn't have a path, hide the LineRenderer
-            //             lineRenderer.positionCount = 0;
-            //         }
-            //     }
-
-            // }
-
-            // PlayerPath ??= playerNavMeshAgent.path;
         }
 
         private RaycastHit GetMouseClickTarget()
@@ -167,49 +142,14 @@ namespace HeyAlexi
 
         public void ExitItemMenu()
         {
-            // Show or hide the pause menu based on the pause state
+            // Show or hide the item menu
             ItemMenu.gameObject.SetActive(false);
         }
 
         public void OpenItemMenu()
         {
-            // Show or hide the pause menu based on the pause state
+            // Show or hide the item menu
             ItemMenu.gameObject.SetActive(true);
         }
-
-        // IEnumerator Task(RaycastHit hit)
-        // {
-        //     while(!(IsFacingTarget(hit.transform)))
-        //     {
-        //         RotateTowardsTarget(hit.transform);
-        //         yield return null;
-        //     }
-
-        //     if (IsInteractable(hit.transform.gameObject))
-        //     {
-        //         hit.transform.gameObject.GetComponent<Interactable>().Interact(hit);
-        //         yield break;
-        //     }
-
-        //     NavToTarget(hit.transform, hit.point);
-
-        //     while(!(GameManager.instance.task == null))
-        //     {
-        //         if (!playerNavMeshAgent.pathPending)
-        //         {
-
-        //             if (playerNavMeshAgent.remainingDistance <= playerNavMeshAgent.stoppingDistance)
-        //             {
-        //                 if (!playerNavMeshAgent.hasPath || playerNavMeshAgent.velocity.sqrMagnitude == 0f)
-        //                 {
-        //                     instance.task = null;
-        //                     yield break;
-        //                 }
-        //             }
-        //         }
-        //         yield return null;
-        //     }
-        // }
-
     }
 }
