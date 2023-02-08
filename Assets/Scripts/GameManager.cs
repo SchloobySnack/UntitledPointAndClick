@@ -15,9 +15,11 @@ namespace HeyAlexi
         // Declare a static instance of the GameManager class
         public static GameManager instance;
         // Declare a public field for the UI canvas
-        public Transform uiCanvas;
+        public Transform PauseMenu;
+        public Transform ItemMenu;
         // Declare a flag to track the pause state
         bool isPaused = false;
+        bool isItemMenuOpen = false;
 
         // Start is called before the first frame update
         void Start()
@@ -34,11 +36,13 @@ namespace HeyAlexi
                 GameObject canvasObject = GameObject.Find("Canvas");
 
                 // Get the Canvas component from the Canvas GameObject
-                uiCanvas = canvasObject.transform.Find("PauseMenu");
+                PauseMenu = canvasObject.transform.Find("PauseMenu");
+                ItemMenu = canvasObject.transform.Find("ItemMenu");
                 player = Instantiate(_playerPrefab);
                 DontDestroyOnLoad(gameObject);
             }
         }
+
 
 
         void Update()
@@ -106,7 +110,7 @@ namespace HeyAlexi
             Time.timeScale = isPaused ? 0 : 1;
 
             // Show or hide the pause menu based on the pause state
-            uiCanvas.gameObject.SetActive(isPaused);
+            PauseMenu.gameObject.SetActive(isPaused);
         }
 
         public void SwitchActiveCamera(Camera newActiveCamera)
@@ -161,6 +165,18 @@ namespace HeyAlexi
             return furthestGameObject;
         }
 
+        public void ExitItemMenu()
+        {
+            // Show or hide the pause menu based on the pause state
+            ItemMenu.gameObject.SetActive(false);
+        }
+
+        public void OpenItemMenu()
+        {
+            // Show or hide the pause menu based on the pause state
+            ItemMenu.gameObject.SetActive(true);
+        }
+
         // IEnumerator Task(RaycastHit hit)
         // {
         //     while(!(IsFacingTarget(hit.transform)))
@@ -181,7 +197,7 @@ namespace HeyAlexi
         //     {
         //         if (!playerNavMeshAgent.pathPending)
         //         {
-                    
+
         //             if (playerNavMeshAgent.remainingDistance <= playerNavMeshAgent.stoppingDistance)
         //             {
         //                 if (!playerNavMeshAgent.hasPath || playerNavMeshAgent.velocity.sqrMagnitude == 0f)
